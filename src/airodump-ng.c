@@ -1448,7 +1448,7 @@ int dump_add_packet( unsigned char *h80211, int caplen, struct rx_info *ri, int 
         if(ap_cur->fcapt == 0 && ap_cur->fmiss == 0) gettimeofday( &(ap_cur->ftimef), NULL);
         if(ap_cur->last_seq != 0) ap_cur->fmiss += (seq - ap_cur->last_seq - 1);
         ap_cur->last_seq = seq;
-        ap_cur->fcapt++;
+        ap_cur->fcapt = ap_cur->last_seq;
         gettimeofday( &(ap_cur->ftimel), NULL);
 
 //         if(ap_cur->fcapt >= QLT_COUNT) update_rx_quality();
@@ -3041,7 +3041,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
     struct ST_info *st_cur;
     struct NA_info *na_cur;
     int columns_ap = 83;
-    int columns_sta = 74;
+    int columns_sta = 90;
     int columns_na = 68;
 
     int num_ap;
@@ -3169,7 +3169,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
 
     memset( strbuf, ' ', ws_col - 1 );
     strbuf[ws_col - 1] = '\0';
-    fprintf( stderr, "%s\n", strbuf );
+    //fprintf( stderr, "%s\n", strbuf );
 
     if(G.show_ap) {
 
@@ -3485,7 +3485,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
 
     if(G.show_sta) {
 	memcpy( strbuf, " BSSID              STATION "
-		"           PWR   Rate    Lost    Frames  Probes", columns_sta );
+		"           PWR   Rate    Lost    Frames   SN    Probes", columns_sta);
 	strbuf[ws_col - 1] = '\0';
 	fprintf( stderr, "%s\n", strbuf );
 
@@ -3576,7 +3576,9 @@ void dump_print( int ws_row, int ws_col, int if_num )
 		fprintf( stderr,  "-%2d", st_cur->rate_from/1000000);
 		fprintf( stderr,  "%c", (st_cur->qos_to_ds) ? 'e' : ' ');
 		fprintf( stderr, "  %4d", st_cur->missed   );
-		fprintf( stderr, " %8lu", st_cur->nb_pkt   );
+		fprintf( stderr, " %8lu", st_cur->nb_pkt  ); 
+		fprintf( stderr, "  %4d", st_cur->lastseq   );
+		
 
 		if( ws_col > (columns_sta - 6) )
 		{
@@ -7444,3 +7446,4 @@ usage:
 
     return( 0 );
 }
+
