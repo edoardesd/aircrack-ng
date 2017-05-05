@@ -3040,6 +3040,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
     struct AP_info *ap_cur;
     struct ST_info *st_cur;
     struct NA_info *na_cur;
+    struct tm *probe_time;
     int columns_ap = 83;
     int columns_sta = 90;
     int columns_na = 68;
@@ -3485,7 +3486,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
 
     if(G.show_sta) {
 	memcpy( strbuf, " BSSID              STATION "
-		"           PWR   Rate    Lost    Frames   SN    Probes", columns_sta);
+		"           PWR    Lost/Frames     SN      Time      Probes", columns_sta);
 	strbuf[ws_col - 1] = '\0';
 	fprintf( stderr, "%s\n", strbuf );
 
@@ -3570,14 +3571,18 @@ void dump_print( int ws_row, int ws_col, int if_num )
 			st_cur->stmac[2], st_cur->stmac[3],
 			st_cur->stmac[4], st_cur->stmac[5] );
 
+		probe_time = localtime( &st_cur->tlast );
+
+
 		fprintf( stderr, "  %3d ", st_cur->power    );
-		fprintf( stderr, "  %2d", st_cur->rate_to/1000000  );
-		fprintf( stderr,  "%c", (st_cur->qos_fr_ds) ? 'e' : ' ');
-		fprintf( stderr,  "-%2d", st_cur->rate_from/1000000);
-		fprintf( stderr,  "%c", (st_cur->qos_to_ds) ? 'e' : ' ');
+		//fprintf( stderr, "  %2d", st_cur->rate_to/1000000  );
+		//fprintf( stderr,  "%c", (st_cur->qos_fr_ds) ? 'e' : ' ');
+		//fprintf( stderr,  "-%2d", st_cur->rate_from/1000000);
+		//fprintf( stderr,  "%c", (st_cur->qos_to_ds) ? 'e' : ' ');
 		fprintf( stderr, "  %4d", st_cur->missed   );
-		fprintf( stderr, " %8lu", st_cur->nb_pkt  ); 
-		fprintf( stderr, "  %4d", st_cur->lastseq   );
+		fprintf( stderr, "%6lu", st_cur->nb_pkt  ); 
+		fprintf( stderr, "     %4d", st_cur->lastseq   );
+		fprintf( stderr, "    %02d:%02d:%02d  ", probe_time->tm_hour, probe_time->tm_min, probe_time->tm_sec   );
 		
 
 		if( ws_col > (columns_sta - 6) )
