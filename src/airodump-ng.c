@@ -3580,7 +3580,7 @@ void dump_print( int ws_row, int ws_col, int if_num )
 		//fprintf( stderr,  "-%2d", st_cur->rate_from/1000000);
 		//fprintf( stderr,  "%c", (st_cur->qos_to_ds) ? 'e' : ' ');
 		fprintf( stderr, "  %4d", st_cur->missed   );
-		fprintf( stderr, "%6lu", st_cur->nb_pkt  ); 
+		fprintf( stderr, "  %6lu", st_cur->nb_pkt  ); 
 		fprintf( stderr, "     %4d", st_cur->lastseq   );
 		fprintf( stderr, "    %02d:%02d:%02d  ", probe_time->tm_hour, probe_time->tm_min, probe_time->tm_sec   );
 		
